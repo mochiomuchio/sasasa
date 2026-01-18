@@ -530,6 +530,8 @@
                 <li><a href="#bbs-section">BBS</a></li>
                 <li id="nav-login-item"><a href="#" onclick="openLoginModal()">LOGIN</a></li>
                 <li id="nav-user-item" style="display:none; color:var(--accent); font-weight:bold;"></li>
+                <li id="nav-kp-item" style="display:none; color:gold; font-weight:bold; cursor:pointer;"
+                    onclick="openShop()">0 KP</li>
                 <li><a href="#admin-trigger-btn">ADMIN</a></li>
             </ul>
         </div>
@@ -783,6 +785,91 @@
         </div>
     </div>
 
+    <!-- FAN QUIZ MODAL -->
+    <div id="fan-quiz-modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2002; align-items:center; justify-content:center;">
+        <div
+            style="background:#1a1a1a; padding:30px; border-radius:15px; border:2px solid var(--accent); max-width:500px; width:90%; color:white;">
+            <h3 style="text-align:center; margin-bottom:20px; color:var(--accent);">🔥 けいちい検定 🔥</h3>
+
+            <div id="quiz-q1" class="quiz-step" style="display:block;">
+                <p style="margin-bottom:15px;">Q1. けいちいのイメージカラーは？</p>
+                <button class="btn" onclick="nextQuiz(1, 10)" style="width:100%; margin-bottom:10px;">赤 (Red)</button>
+                <button class="btn" onclick="nextQuiz(1, 0)" style="width:100%; background:#333;">青 (Blue)</button>
+                <button class="btn" onclick="nextQuiz(1, 0)" style="width:100%; background:#333;">透明
+                    (Invisible)</button>
+            </div>
+
+            <div id="quiz-q2" class="quiz-step" style="display:none;">
+                <p style="margin-bottom:15px;">Q2. けいちいの配信スタイルは？</p>
+                <button class="btn" onclick="nextQuiz(2, 0)" style="width:100%; margin-bottom:10px; background:#333;">清楚
+                    (Seiso)</button>
+                <button class="btn" onclick="nextQuiz(2, 20)" style="width:100%; margin-bottom:10px;">カオス
+                    (Chaos)</button>
+                <button class="btn" onclick="nextQuiz(2, -50)" style="width:100%; background:#333;">虚無
+                    (Nothing)</button>
+            </div>
+
+            <div id="quiz-q3" class="quiz-step" style="display:none;">
+                <p style="margin-bottom:15px;">Q3. けいちいは最強である。</p>
+                <button class="btn" onclick="nextQuiz(3, 70)" style="width:100%; margin-bottom:10px;">はい (YES)</button>
+                <button class="btn" onclick="nextQuiz(3, -100)" style="width:100%; background:#333;">いいえ (NO)</button>
+            </div>
+
+            <button onclick="document.getElementById('fan-quiz-modal').style.display='none'"
+                style="display:block; margin:20px auto 0; background:none; border:none; color:#888;">Quit</button>
+        </div>
+    </div>
+    <!-- SHOP MODAL -->
+    <div id="shop-modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2003; align-items:center; justify-content:center;">
+        <div
+            style="background:#222; padding:30px; border-radius:15px; border:2px solid gold; max-width:600px; width:95%; color:white;">
+            <h3 style="text-align:center; margin-bottom:20px; color:gold;">💰 KEICHII SHOP 💰</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                <div style="background:#333; padding:15px; border-radius:8px; text-align:center;">
+                    <h4>Golden Name</h4>
+                    <p style="font-size:0.8rem; color:#aaa;">BBS Name becomes GOLD</p>
+                    <p style="color:gold; font-weight:bold;">500 KP</p>
+                    <button class="btn" onclick="buyItem('gold_name', 500)">BUY</button>
+                </div>
+                <div style="background:#333; padding:15px; border-radius:8px; text-align:center;">
+                    <h4>Rainbow Theme</h4>
+                    <p style="font-size:0.8rem; color:#aaa;">Unlock Rainbow BG</p>
+                    <p style="color:gold; font-weight:bold;">1000 KP</p>
+                    <button class="btn" onclick="buyItem('rainbow_bg', 1000)">BUY</button>
+                </div>
+                <div style="background:#333; padding:15px; border-radius:8px; text-align:center;">
+                    <h4>Donate (Fake)</h4>
+                    <p style="font-size:0.8rem; color:#aaa;">Just lose money</p>
+                    <p style="color:gold; font-weight:bold;">100 KP</p>
+                    <button class="btn" onclick="buyItem('donate', 100)">DONATE</button>
+                </div>
+                <div style="background:#333; padding:15px; border-radius:8px; text-align:center;">
+                    <h4>God Title</h4>
+                    <p style="font-size:0.8rem; color:#aaa;">Prefix name with [GOD]</p>
+                    <p style="color:gold; font-weight:bold;">9999 KP</p>
+                    <button class="btn" onclick="buyItem('god_title', 9999)">BUY</button>
+                </div>
+            </div>
+            <button onclick="document.getElementById('shop-modal').style.display='none'"
+                style="display:block; margin:20px auto 0; background:none; border:none; color:#888;">Close Shop</button>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL (ACCOUNT) -->
+    <div id="login-modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:2001; align-items:center; justify-content:center;">
+        <div
+            style="background:#222; padding:40px; border-radius:10px; border:2px solid var(--accent); text-align:center; max-width:400px; width:90%;">
+            <h3 style="margin-bottom:20px;">KEICHII FAN CLUB LOGIN</h3>
+            <input type="text" id="login-username" placeholder="Username" style="margin-bottom:20px;">
+            <button class="btn" onclick="performLogin()">LOGIN / SIGNUP</button>
+            <button onclick="document.getElementById('login-modal').style.display='none'"
+                style="display:block; margin:20px auto 0; background:none; border:none; color:#888;">Close</button>
+        </div>
+    </div>
+
     <!-- QUIZ MODAL -->
     <div id="quiz-modal" class="quiz-modal">
         <h3>CULT QUIZ</h3>
@@ -917,16 +1004,49 @@
             }
         }
 
+        let quizScore = 0;
         function checkFanLevel() {
-            const level = Math.floor(Math.random() * 101);
-            const el = document.getElementById('fan-result');
-            let msg = '';
-            if (level === 100) msg = 'GOD (神)';
-            else if (level > 80) msg = 'TOXIC FAN (厄介オタク)';
-            else if (level > 50) msg = 'NORMAL (一般人)';
-            else msg = 'HATER (アンチ)';
+            // Reset and open modal
+            quizScore = 0;
+            document.querySelectorAll('.quiz-step').forEach(el => el.style.display = 'none');
+            document.getElementById('quiz-q1').style.display = 'block';
+            document.getElementById('fan-quiz-modal').style.display = 'flex';
+        }
 
-            el.innerHTML = `LEVEL: <span style="color:var(--accent); font-size:3rem;">${level}%</span><br><span style="font-size:1rem; color:#aaa;">${msg}</span>`;
+        function nextQuiz(step, points) {
+            quizScore += points;
+            document.getElementById(`quiz-q${step}`).style.display = 'none';
+
+            if (step < 3) {
+                document.getElementById(`quiz-q${step + 1}`).style.display = 'block';
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('fan-quiz-modal').style.display = 'none';
+            const el = document.getElementById('fan-result');
+
+            // Normalize score
+            if (quizScore < 0) quizScore = 0;
+            if (quizScore > 100) quizScore = 100;
+
+            let msg = '';
+            let color = 'white';
+
+            if (quizScore === 100) { msg = 'GOD (神)'; color = 'gold'; }
+            else if (quizScore >= 80) { msg = 'ELITE (精鋭)'; color = '#f39c12'; }
+            else if (quizScore >= 40) { msg = 'NORMAL (一般人)'; color = 'white'; }
+            else { msg = 'FAKE FAN (にわか)'; color = '#7f8c8d'; }
+
+            el.innerHTML = `LEVEL: <span style="color:${color}; font-size:3rem; text-shadow: 0 0 10px ${color};">${quizScore}%</span><br><span style="font-size:1rem; color:#aaa;">${msg}</span>`;
+
+            // Link to Account
+            const user = localStorage.getItem('keichii_username');
+            if (user) {
+                el.innerHTML += `<div style="font-size:0.8rem; margin-top:5px; color:#555;">Certified for: ${user}</div>`;
+            }
         }
 
         function toggleGlitch() { document.body.classList.toggle('glitch-active'); }
@@ -942,9 +1062,40 @@
             document.body.appendChild(h); setTimeout(() => h.remove(), 1000);
         }
 
+        // --- ECONOMY (KP) ---
+        let kp = 0;
+        function updateKP(amount) {
+            kp += amount;
+            localStorage.setItem('keichii_kp', kp);
+            const el = document.getElementById('nav-kp-item');
+            if (el) {
+                el.textContent = `${kp} KP`;
+                el.style.display = localStorage.getItem('keichii_username') ? 'block' : 'none';
+            }
+        }
+        function openShop() { document.getElementById('shop-modal').style.display = 'flex'; }
+
+        function buyItem(item, cost) {
+            if (kp < cost) return alert('KPが足りません！ (NOT ENOUGH KP)');
+            if (!confirm(`Buy ${item} for ${cost} KP?`)) return;
+
+            updateKP(-cost);
+            let inventory = JSON.parse(localStorage.getItem('keichii_inventory') || '{}');
+            inventory[item] = true;
+            localStorage.setItem('keichii_inventory', JSON.stringify(inventory));
+            applyInventory();
+            alert('PURCHASE SUCCESSFUL!');
+        }
+
+        function applyInventory() {
+            const inventory = JSON.parse(localStorage.getItem('keichii_inventory') || '{}');
+            if (inventory.rainbow_bg) document.body.style.background = 'linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3)';
+        }
+
         function clickerIncrement() {
             const el = document.getElementById('click-count');
             el.textContent = parseInt(el.textContent) + 1;
+            updateKP(1); // Earn KP
         }
 
         function drawOmikuji() {
@@ -1009,9 +1160,32 @@
                 loginBtn.style.display = 'none';
                 userDisplay.style.display = 'block';
                 userDisplay.innerHTML = `${user} <span style="font-size:0.7rem; color:#888; cursor:pointer;" onclick="logout()">(LOGOUT)</span>`;
+
+                // Initialize KP
+                kp = parseInt(localStorage.getItem('keichii_kp') || '0');
+                updateKP(0);
+
+                // Login Bonus
+                const lastLogin = localStorage.getItem('keichii_last_login');
+                const today = new Date().toDateString();
+                if (lastLogin !== today) {
+                    updateKP(100);
+                    localStorage.setItem('keichii_last_login', today);
+                    alert('🎁 LOGIN BONUS: +100 KP! 🎁');
+                }
+
+                applyInventory();
+
                 // Auto-fill BBS
                 const bbsInput = document.getElementById('bbs-name');
-                if (bbsInput) bbsInput.value = user;
+                if (bbsInput) {
+                    const inventory = JSON.parse(localStorage.getItem('keichii_inventory') || '{}');
+                    let display = user;
+                    if (inventory.god_title) display = `[GOD] ${display}`;
+                    bbsInput.value = display;
+                    if (inventory.gold_name) bbsInput.style.color = 'gold';
+                }
+
                 // Auto-fill Fan Check
                 if (document.getElementById('fan-result').innerHTML === '') {
                     document.getElementById('fan-result').innerHTML = `<span style="font-size:1rem; color:#aaa;">(Logged in as ${user})</span>`;
@@ -1019,6 +1193,7 @@
             } else {
                 loginBtn.style.display = 'block';
                 userDisplay.style.display = 'none';
+                document.getElementById('nav-kp-item').style.display = 'none';
             }
         }
 

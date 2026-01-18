@@ -474,6 +474,32 @@
             font-size: 1.1rem;
         }
 
+        /* Keichii Specs */
+        .trophy {
+            aspect-ratio: 1;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border-radius: 10px;
+            opacity: 0.3;
+            filter: grayscale(1);
+            transition: 0.3s;
+        }
+
+        .trophy.unlocked {
+            opacity: 1;
+            filter: grayscale(0);
+            background: #444;
+            box-shadow: 0 0 10px gold;
+            cursor: pointer;
+        }
+
+        .trophy.unlocked:hover {
+            transform: scale(1.1);
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             .hero h1 {
@@ -634,37 +660,59 @@
         </div>
     </section>
 
-    <!-- SPECS & FAN LEVEL SECTION -->
-    <section id="specs" style="background: #111; padding: 60px 0;">
+    <!-- STATUS & TROPHIES -->
+    <section id="status-trophies" style="background: #111; padding: 60px 0;">
         <div class="container">
             <div class="section-header">
-                <h2>KEICHII'S GEAR</h2>
+                <h2>KEICHII STATUS & ACHIEVEMENTS</h2>
             </div>
-            <div class="specs-grid">
-                <div class="spec-item">
-                    <div class="spec-label">MOUSE</div>
-                    <div class="spec-val">Logicool G Pro X Superlight</div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:40px;">
+                <!-- STOCK MARKET -->
+                <div>
+                    <h3 style="border-bottom:2px solid var(--accent); padding-bottom:10px; margin-bottom:20px;">KEICHII
+                        STOCK MARKET</h3>
+                    <div style="background:#222; border:1px solid #444; border-radius:10px; padding:15px;">
+                        <canvas id="stock-chart"
+                            style="width:100%; height:150px; background:#000; border:1px solid #333;"></canvas>
+                        <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <div style="font-size:0.8rem; color:#aaa;">CURRENT PRICE</div>
+                                <div id="stock-price" style="font-size:1.5rem; font-weight:bold; color:var(--accent);">
+                                    150 KP</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-size:0.8rem; color:#aaa;">YOU OWN</div>
+                                <div id="stock-owned" style="font-size:1.2rem; font-weight:bold;">0 STK</div>
+                            </div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+                            <button class="btn" onclick="tradeStock('buy')" style="background:green;">BUY (1
+                                STK)</button>
+                            <button class="btn" onclick="tradeStock('sell')" style="background:red;">SELL (ALL)</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="spec-item">
-                    <div class="spec-label">KEYBOARD</div>
-                    <div class="spec-val">SteelSeries Apex Pro TKL</div>
-                </div>
-                <div class="spec-item">
-                    <div class="spec-label">HEADSET</div>
-                    <div class="spec-val">HyperX Cloud II</div>
-                </div>
-                <div class="spec-item">
-                    <div class="spec-label">MONITOR</div>
-                    <div class="spec-val">BenQ ZOWIE XL2546K</div>
-                </div>
-                <div class="spec-item">
-                    <div class="spec-label">SENSITIVITY</div>
-                    <div class="spec-val">800dpi / 0.45</div>
+
+                <!-- TROPHY ROOM -->
+                <div>
+                    <h3 style="border-bottom:2px solid gold; padding-bottom:10px; margin-bottom:20px; color:gold;">
+                        TROPHY ROOM</h3>
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;" id="trophy-grid">
+                        <div class="trophy" id="t-login" title="First Login">🚪</div>
+                        <div class="trophy" id="t-click" title="Click Master (100 Clicks)">🖱️</div>
+                        <div class="trophy" id="t-rich" title="Rich (1000 KP)">💰</div>
+                        <div class="trophy" id="t-fan" title="God Fan (Rank 100)">👑</div>
+                        <div class="trophy" id="t-shop" title="Shopper (Buy Item)">🛍️</div>
+                        <div class="trophy" id="t-secret" title="???">❓</div>
+                    </div>
+                    <div id="trophy-msg" style="margin-top:20px; font-size:0.9rem; color:#aaa; min-height:20px;">Login
+                        to view achievements</div>
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 80px; border-top: 1px dashed #333; padding-top: 40px;">
-                <h3 style="margin-bottom: 20px;">ARE YOU A TRUE FAN?</h3>
+            <!-- FAN CHECK BTN (MOVED) -->
+            <div style="text-align: center; margin-top: 50px;">
                 <button class="btn" style="background: linear-gradient(45deg, #ff0000, #ff5500); font-size: 1.2rem;"
                     onclick="checkFanLevel()">
                     🔥 けいちい愛レベル診断 🔥
@@ -672,6 +720,7 @@
                 <div id="fan-result" style="margin-top: 20px; font-size: 1.5rem; font-weight: bold; min-height: 40px;">
                 </div>
             </div>
+
         </div>
     </section>
 
@@ -893,6 +942,7 @@
             initBBS();
             loadAdminData();
             checkLogin();
+            initStockMarket();
 
 
             // Konami Code
@@ -1049,7 +1099,125 @@
             }
         }
 
-        function toggleGlitch() { document.body.classList.toggle('glitch-active'); }
+        // --- STOCK MARKET ---
+        let stockPrice = 100;
+        let stockHistory = [];
+        let stockOwned = 0;
+
+        function initStockMarket() {
+            stockOwned = parseInt(localStorage.getItem('keichii_stock') || '0');
+            updateStockUI();
+
+            // Simulation Loop
+            setInterval(() => {
+                // Random fluctuation
+                let change = (Math.random() - 0.48) * 20; // Slight upward bias
+                if (Math.random() < 0.05) change = -50; // Crash
+                if (Math.random() < 0.05) change = 100; // Spike
+
+                stockPrice += change;
+                if (stockPrice < 10) stockPrice = 10;
+                if (stockPrice > 9999) stockPrice = 9999;
+
+                stockHistory.push(stockPrice);
+                if (stockHistory.length > 50) stockHistory.shift();
+
+                drawStockChart();
+                updateStockUI();
+            }, 1000);
+        }
+
+        function drawStockChart() {
+            const cvs = document.getElementById('stock-chart');
+            if (!cvs) return;
+            const ctx = cvs.getContext('2d');
+            cvs.width = cvs.parentElement.offsetWidth;
+            cvs.height = 150;
+
+            ctx.clearRect(0, 0, cvs.width, cvs.height);
+            ctx.strokeStyle = '#00ff00';
+            if (stockHistory.length > 1 && stockHistory[stockHistory.length - 1] < stockHistory[stockHistory.length - 2]) {
+                ctx.strokeStyle = '#ff0000';
+            }
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            const max = Math.max(...stockHistory, 200);
+            const min = Math.min(...stockHistory, 50);
+
+            stockHistory.forEach((p, i) => {
+                const x = (i / 50) * cvs.width;
+                const y = cvs.height - ((p - min) / (max - min) * (cvs.height - 20)) - 10;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+        }
+
+        function updateStockUI() {
+            const priceEl = document.getElementById('stock-price');
+            const ownEl = document.getElementById('stock-owned');
+            if (priceEl) priceEl.textContent = Math.floor(stockPrice) + ' KP';
+            if (ownEl) ownEl.textContent = stockOwned + ' STK';
+
+            if (priceEl) {
+                priceEl.style.color = (stockHistory.length > 1 && stockPrice >= stockHistory[stockHistory.length - 2])
+                    ? '#00ff00' : '#ff0000';
+            }
+        }
+
+        function tradeStock(action) {
+            const p = Math.floor(stockPrice);
+            if (action === 'buy') {
+                if (kp < p) return alert('NOT ENOUGH KP!');
+                updateKP(-p);
+                stockOwned++;
+                localStorage.setItem('keichii_stock', stockOwned);
+                alert(`BOUGHT 1 STOCK @ ${p} KP`);
+            } else {
+                if (stockOwned <= 0) return alert('NO STOCK TO SELL!');
+                const gain = stockOwned * p;
+                updateKP(gain);
+                alert(`SOLD ${stockOwned} STOCK FOR ${gain} KP`);
+                stockOwned = 0;
+                localStorage.setItem('keichii_stock', stockOwned);
+            }
+            updateStockUI();
+        }
+
+        function checkAchievements() {
+            const user = localStorage.getItem('keichii_username');
+            if (!user) return;
+
+            const achievements = JSON.parse(localStorage.getItem('keichii_achievements') || '{}');
+            const unlock = (id) => {
+                if (!achievements[id]) {
+                    achievements[id] = true;
+                    localStorage.setItem('keichii_achievements', JSON.stringify(achievements));
+                    alert(`🏆 ACHIEVEMENT UNLOCKED: ${id.toUpperCase()}! 🏆`);
+                }
+                document.getElementById('t-' + id).classList.add('unlocked');
+            }
+
+            // A1: Login (Always true if here)
+            unlock('login');
+
+            // A2: Click Master
+            const clicks = parseInt(document.getElementById('click-count').textContent);
+            if (clicks >= 100) unlock('click');
+
+            // A3: Rich
+            if (kp >= 1000) unlock('rich');
+
+            // A4: Fan
+            // Checked in quiz result
+
+            // A5: Shop
+            const inv = JSON.parse(localStorage.getItem('keichii_inventory') || '{}');
+            if (Object.keys(inv).length > 0) unlock('shop');
+
+            document.getElementById('trophy-msg').textContent = `Achievements for ${user}`;
+        }
         function toggleGravity() {
             document.querySelectorAll('div, section, h1, p').forEach(el => el.classList.add('falling'));
             setTimeout(() => alert('Gravity restored on reload'), 2000);
@@ -1084,6 +1252,7 @@
             inventory[item] = true;
             localStorage.setItem('keichii_inventory', JSON.stringify(inventory));
             applyInventory();
+            checkAchievements(); // Check for shopper achievement
             alert('PURCHASE SUCCESSFUL!');
         }
 
@@ -1096,6 +1265,7 @@
             const el = document.getElementById('click-count');
             el.textContent = parseInt(el.textContent) + 1;
             updateKP(1); // Earn KP
+            checkAchievements();
         }
 
         function drawOmikuji() {
@@ -1174,6 +1344,9 @@
                     alert('🎁 LOGIN BONUS: +100 KP! 🎁');
                 }
 
+
+
+                checkAchievements();
                 applyInventory();
 
                 // Auto-fill BBS

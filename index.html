@@ -583,11 +583,17 @@
         /* Admin Trigger (Secret) */
         #admin-trigger {
             display: inline-block;
-            width: 10px;
-            height: 10px;
-            background: #080808;
+            width: 14px;
+            height: 14px;
+            background: #222;
             margin-top: 20px;
             cursor: default;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        #admin-trigger:hover {
+            background: #333;
         }
 
         /* Admin Modal */
@@ -605,7 +611,7 @@
 
         .admin-panel {
             background: #1a1a1a;
-            max-width: 600px;
+            max-width: 700px;
             margin: 50px auto;
             padding: 30px;
             border-radius: 12px;
@@ -626,6 +632,7 @@
             background: #111;
             padding: 20px;
             border-radius: 8px;
+            border: 1px solid #222;
         }
 
         .admin-section h4 {
@@ -684,6 +691,62 @@
             background: var(--accent-hover);
         }
 
+        .admin-btn.danger {
+            background: #800;
+        }
+
+        /* Emergency Overlay */
+        #emergency-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f00;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                background: #a00;
+            }
+
+            50% {
+                background: #d00;
+            }
+        }
+
+        .emergency-text {
+            font-size: 5rem;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        /* Terminal Overlay */
+        #terminal-overlay {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40vh;
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 2px solid #0f0;
+            z-index: 9998;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+            overflow: hidden;
+        }
+
         /* Animation Keyframes */
         @keyframes fadeInUp {
             from {
@@ -707,6 +770,12 @@
             }
         }
 
+        /* Global Edit Mode */
+        body.god-mode * {
+            cursor: text !important;
+            outline: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -717,7 +786,6 @@
                 display: none;
             }
 
-            /* Simplified for demo, ideally a burger menu */
             .profile-card {
                 flex-direction: column;
                 text-align: center;
@@ -738,6 +806,17 @@
 </head>
 
 <body>
+
+    <!-- Emergency Overlay -->
+    <div id="emergency-overlay">
+        <div class="emergency-text">EMERGENCY</div>
+        <p style="color:white; font-size:1.5rem;">System Critical Failure...</p>
+        <button onclick="stopEmergency()"
+            style="margin-top:20px; padding:10px; background:white; color:black; border:none; cursor:pointer;">TERMINATE</button>
+    </div>
+
+    <!-- Terminal Overlay -->
+    <div id="terminal-overlay"></div>
 
     <!-- Navigation -->
     <nav id="navbar">
@@ -939,8 +1018,11 @@
             </div>
             <p class="copyright">&copy; 2024 Keichii Official. All rights reserved.</p>
 
-            <!-- Secret Trigger -->
-            <div id="admin-trigger" title="Admin Login"></div>
+            <!-- Secret Trigger: Visible for ease of use -->
+            <div style="margin-top: 20px;">
+                <button id="admin-trigger-btn" class="btn"
+                    style="background:#222; font-size:0.8rem; padding: 5px 15px;">管理者ログイン (ここをクリック)</button>
+            </div>
         </div>
     </footer>
 
@@ -957,7 +1039,7 @@
 
             <!-- Login View -->
             <div id="admin-login-view">
-                <p style="margin-bottom:15px;">Enter Password:</p>
+                <p style="margin-bottom:15px;">Enter Password (keichiidougahankamisugidayonee):</p>
                 <input type="password" id="admin-pass" placeholder="Password">
                 <button onclick="checkAdmin()" class="admin-btn primary"
                     style="width:100%; margin-top:10px;">Login</button>
@@ -967,63 +1049,72 @@
             <div id="admin-dashboard-view" style="display:none;">
                 <p style="color:var(--text-sub); margin-bottom:20px;">Welcome back, <strong>暇っちー</strong> (Admin).</p>
 
-                <!-- 1. Memo Pad -->
-                <div class="admin-section">
-                    <h4>📝 ネタ帳 (自分用メモ)</h4>
-                    <textarea id="admin-memo" rows="4" placeholder="思いついた企画をここに書く..."></textarea>
-                    <button onclick="saveMemo()" class="admin-btn primary" style="margin-top:10px;">Save Memo</button>
-                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                    <!-- Left Column -->
+                    <div>
+                        <div class="admin-section">
+                            <h4>📝 ネタ帳 (自分用メモ)</h4>
+                            <textarea id="admin-memo" rows="4" placeholder="思いついた企画をここに書く..."></textarea>
+                            <button onclick="saveMemo()" class="admin-btn primary" style="margin-top:10px;">Save
+                                Memo</button>
+                        </div>
 
-                <!-- 2. News Editor -->
-                <div class="admin-section">
-                    <h4>📢 お知らせ投稿</h4>
-                    <div class="form-group">
-                        <input type="text" id="news-text" placeholder="お知らせ内容">
-                    </div>
-                    <button onclick="addNews()" class="admin-btn primary">Post News</button>
-                    <button onclick="clearNews()" class="admin-btn" style="margin-left:10px;">Clear All</button>
-                </div>
+                        <div class="admin-section">
+                            <h4>📢 お知らせ投稿</h4>
+                            <div class="form-group">
+                                <input type="text" id="news-text" placeholder="お知らせ内容">
+                            </div>
+                            <button onclick="addNews()" class="admin-btn primary">Post</button>
+                            <button onclick="clearNews()" class="admin-btn">Clear</button>
+                        </div>
 
-                <!-- 3. Featured Video -->
-                <div class="admin-section">
-                    <h4>📺 ピックアップ動画</h4>
-                    <div class="form-group">
-                        <label>YouTube Video ID (e.g. dQw4w9WgXcQ)</label>
-                        <input type="text" id="featured-id" placeholder="Video ID">
+                        <div class="admin-section">
+                            <h4>🎨 テーマカラー変更</h4>
+                            <div style="display:flex; gap:10px;">
+                                <button onclick="setTheme('#ff0000')" class="admin-btn"
+                                    style="background:#ff0000; width:30px; height:30px;"></button>
+                                <button onclick="setTheme('#0088ff')" class="admin-btn"
+                                    style="background:#0088ff; width:30px; height:30px;"></button>
+                                <button onclick="setTheme('#00ff88')" class="admin-btn"
+                                    style="background:#00ff88; width:30px; height:30px;"></button>
+                                <button onclick="setTheme('#ffd700')" class="admin-btn"
+                                    style="background:#ffd700; width:30px; height:30px;"></button>
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="saveFeatured()" class="admin-btn primary">Set Video</button>
-                    <button onclick="removeFeatured()" class="admin-btn">Remove</button>
-                </div>
 
-                <!-- 4. Countdown -->
-                <div class="admin-section">
-                    <h4>⏳ イベントカウントダウン</h4>
-                    <div class="form-group">
-                        <label>Target Date</label>
-                        <input type="datetime-local" id="countdown-date">
-                    </div>
-                    <div class="form-group">
-                        <label>Event Name</label>
-                        <input type="text" id="countdown-title" placeholder="LIVE配信まで...">
-                    </div>
-                    <button onclick="setCountdown()" class="admin-btn primary">Start Countdown</button>
-                    <button onclick="stopCountdown()" class="admin-btn">Stop</button>
-                </div>
+                    <!-- Right Column (God Tier) -->
+                    <div>
+                        <div class="admin-section">
+                            <h4>📺 ピックアップ動画</h4>
+                            <input type="text" id="featured-id" placeholder="Video ID">
+                            <button onclick="saveFeatured()" class="admin-btn primary" style="margin-top:10px;">Set
+                                Video</button>
+                        </div>
 
-                <!-- 5. Theme Color -->
-                <div class="admin-section">
-                    <h4>🎨 テーマカラー変更</h4>
-                    <div style="display:flex; gap:10px;">
-                        <button onclick="setTheme('#ff0000')" class="admin-btn"
-                            style="background:#ff0000; width:30px; height:30px;"></button>
-                        <button onclick="setTheme('#0088ff')" class="admin-btn"
-                            style="background:#0088ff; width:30px; height:30px;"></button>
-                        <button onclick="setTheme('#00ff88')" class="admin-btn"
-                            style="background:#00ff88; width:30px; height:30px;"></button>
-                        <button onclick="setTheme('#ff00ff')" class="admin-btn"
-                            style="background:#ff00ff; width:30px; height:30px;"></button>
-                        <button onclick="setTheme('#ffd700')" class="admin-btn"
-                            style="background:#ffd700; width:30px; height:30px;"></button>
+                        <div class="admin-section">
+                            <h4>⏳ イベントカウントダウン</h4>
+                            <input type="datetime-local" id="countdown-date" style="margin-bottom:5px;">
+                            <input type="text" id="countdown-title" placeholder="Event Name">
+                            <button onclick="setCountdown()" class="admin-btn primary"
+                                style="margin-top:10px;">Start</button>
+                            <button onclick="stopCountdown()" class="admin-btn">Stop</button>
+                        </div>
+
+                        <div class="admin-section" style="border-color: #555;">
+                            <h4 style="color: gold;">⚡ God Tier Tools</h4>
+                            <button onclick="toggleGlobalEdit()" class="admin-btn primary"
+                                style="width:100%; margin-bottom:10px;">God Hand (Edit Mode)</button>
+                            <button onclick="triggerEmergency()" class="admin-btn danger"
+                                style="width:100%; margin-bottom:10px;">EMERGENCY ALERT</button>
+                            <button onclick="toggleTerminal()" class="admin-btn"
+                                style="width:100%; border:1px solid #0f0; color:#0f0;">Hacker Terminal</button>
+                            <div style="margin-top:10px;">
+                                <input type="text" id="css-inject" placeholder="CSS here (e.g. body{background:blue;})">
+                                <button onclick="injectCSS()" class="admin-btn"
+                                    style="width:100%; margin-top:5px;">Inject CSS</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1120,18 +1211,13 @@
         // 3. ADMIN & LOCAL STORAGE SYSTEM
         // ------------------------------------
         const modal = document.getElementById('admin-modal');
-        const adminTrigger = document.getElementById('admin-trigger');
+        const adminBtn = document.getElementById('admin-trigger-btn');
         const loginView = document.getElementById('admin-login-view');
         const dashView = document.getElementById('admin-dashboard-view');
 
-        // Trigger
-        let triggerCount = 0;
-        adminTrigger.addEventListener('click', () => {
-            triggerCount++;
-            if (triggerCount >= 5) { // 5 clicks to open
-                modal.style.display = 'block';
-                triggerCount = 0;
-            }
+        // Trigger (1 Click now)
+        adminBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
         });
 
         function closeAdmin() { modal.style.display = 'none'; }
@@ -1149,24 +1235,19 @@
 
         // Load persisted settings
         function loadAdminSettings() {
-            // News
             const news = JSON.parse(localStorage.getItem('keichii_news') || '[]');
             renderNews(news);
 
-            // Theme
             const color = localStorage.getItem('keichii_accent');
             if (color) document.documentElement.style.setProperty('--accent', color);
 
-            // Featured Video
             const featId = localStorage.getItem('keichii_featured');
             if (featId) showFeatured(featId);
 
-            // Countdown
             const countTarget = localStorage.getItem('keichii_countdown_date');
             if (countTarget) startTimer(countTarget, localStorage.getItem('keichii_countdown_title'));
         }
 
-        // Populate Dashboard Inputs
         function loadAdminValues() {
             document.getElementById('admin-memo').value = localStorage.getItem('keichii_memo') || '';
         }
@@ -1258,18 +1339,11 @@
             timerInterval = setInterval(() => {
                 const now = new Date().getTime();
                 const dist = target - now;
-
-                if (dist < 0) {
-                    clearInterval(timerInterval);
-                    timer.textContent = "STARTED";
-                    return;
-                }
-
+                if (dist < 0) { clearInterval(timerInterval); timer.textContent = "STARTED"; return; }
                 const d = Math.floor(dist / (1000 * 60 * 60 * 24));
                 const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
                 const s = Math.floor((dist % (1000 * 60)) / 1000);
-
                 timer.textContent = `${d}d ${h}h ${m}m ${s}s`;
             }, 1000);
         }
@@ -1278,6 +1352,67 @@
         function setTheme(color) {
             document.documentElement.style.setProperty('--accent', color);
             localStorage.setItem('keichii_accent', color);
+        }
+
+        // --- GOD TIER FEATURES ---
+
+        // 6. Global Edit Mode
+        function toggleGlobalEdit() {
+            const isEditable = document.body.contentEditable === 'true';
+            document.body.contentEditable = !isEditable;
+            if (!isEditable) {
+                document.body.classList.add('god-mode');
+                alert('GOD HAND ACTIVATED: You can now edit any text on the page.');
+            } else {
+                document.body.classList.remove('god-mode');
+                alert('God Hand Deactivated.');
+            }
+            closeAdmin();
+        }
+
+        // 7. Emergency Alert
+        function triggerEmergency() {
+            const overlay = document.getElementById('emergency-overlay');
+            overlay.style.display = 'flex';
+            // Play alarm sound if possible? (Browser blocks autoplay usually)
+            closeAdmin();
+        }
+        function stopEmergency() {
+            document.getElementById('emergency-overlay').style.display = 'none';
+        }
+
+        // 8. Terminal
+        function toggleTerminal() {
+            const term = document.getElementById('terminal-overlay');
+            if (term.style.display === 'block') {
+                term.style.display = 'none';
+                return;
+            }
+            term.style.display = 'block';
+            closeAdmin();
+
+            // Fake Log
+            setInterval(() => {
+                const logs = [
+                    "Access grant: 192.168.0.1", "Bypassing firewall...", "Downloading assets...",
+                    "Encrypting payload...", "User_Keichii status: GOD", "Coffee level: LOW",
+                    "Compiling shaders...", "Injecting script...", "System override..."
+                ];
+                const p = document.createElement('div');
+                p.textContent = `> ${logs[Math.floor(Math.random() * logs.length)]} [${Date.now()}]`;
+                term.appendChild(p);
+                term.scrollTop = term.scrollHeight;
+                if (term.childElementCount > 20) term.firstChild.remove();
+            }, 100);
+        }
+
+        // 9. CSS Inject
+        function injectCSS() {
+            const css = document.getElementById('css-inject').value;
+            const style = document.createElement('style');
+            style.textContent = css;
+            document.head.appendChild(style);
+            alert('CSS Injected!');
         }
 
 

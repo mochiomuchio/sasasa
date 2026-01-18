@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keichii Official Website</title>
+    <title>Keichii Official | The Chaos</title>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg-color: #0f0f0f;
@@ -25,20 +27,26 @@
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
+            cursor: default;
         }
 
         body {
-            background-color: var(--bg-color);
+            background: var(--bg-color);
             color: var(--text-main);
             font-family: var(--font-family);
             overflow-x: hidden;
-            transition: background-color 0.5s;
+            transition: 0.5s;
+            position: relative;
         }
 
         a {
             text-decoration: none;
             color: inherit;
-            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        button {
+            cursor: pointer;
         }
 
         ul {
@@ -59,23 +67,61 @@
 
         .btn {
             display: inline-block;
-            background-color: var(--accent);
+            background: var(--accent);
             color: white;
             padding: 12px 28px;
             border-radius: 50px;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
             border: none;
+            font-size: 0.9rem;
             box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
-            transition: all 0.3s;
+            transition: 0.3s;
         }
 
         .btn:hover {
-            background-color: var(--accent-hover);
+            background: var(--accent-hover);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            border-bottom: 4px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        /* 12. News Ticker */
+        #news-ticker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            z-index: 900;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            padding: 5px 0;
+        }
+
+        #news-ticker span {
+            display: inline-block;
+            animation: scroll-left 20s linear infinite;
+            padding-left: 100%;
+        }
+
+        @keyframes scroll-left {
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
         /* Navigation */
@@ -101,7 +147,6 @@
             font-size: 1.5rem;
             font-weight: 900;
             color: white;
-            letter-spacing: -1px;
         }
 
         .logo span {
@@ -110,44 +155,21 @@
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 20px;
         }
 
         .nav-links a {
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-sub);
-            position: relative;
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
+        .nav-links a:hover {
             color: white;
+            color: var(--accent);
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Mobile Menu */
-        .menu-toggle {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
+        /* Hero */
         .hero {
             height: 100vh;
             display: flex;
@@ -155,15 +177,9 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), var(--bg-color)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-            position: relative;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), var(--bg-color)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
             padding-top: 70px;
-            /* nav height */
-        }
-
-        .hero-content {
-            z-index: 2;
-            animation: fadeInUp 1s ease-out;
+            position: relative;
         }
 
         .hero h1 {
@@ -174,632 +190,292 @@
             text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-sub);
-            margin-bottom: 40px;
+        /* 4. Cursor Trail (Canvas) */
+        #cursor-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
         }
 
-        .countdown-box {
+        /* 11. Fake Visitor Counter */
+        .retro-counter {
+            font-family: 'Press Start 2P', cursive;
+            background: black;
+            border: 2px solid #555;
+            padding: 10px;
+            color: #0f0;
             margin-top: 20px;
-            padding: 15px 30px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--accent);
-            border-radius: 8px;
-            display: none;
-            /* JS toggles this */
-        }
-
-        .countdown-text {
-            font-size: 0.9rem;
-            color: var(--accent);
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .countdown-timer {
-            font-size: 2rem;
-            font-weight: 900;
-            font-family: monospace;
-        }
-
-        /* Featured Video (Admin) */
-        #featured-video-section {
-            display: none;
-            /* toggled by admin */
-            padding: 40px 0;
-            background: linear-gradient(to right, #2a0000, #000);
-            border-bottom: 1px solid #333;
-        }
-
-        .featured-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .featured-label {
-            background: var(--accent);
-            color: white;
-            padding: 5px 10px;
+            display: inline-block;
             font-size: 0.8rem;
-            font-weight: bold;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            display: inline-block;
         }
 
-        .featured-desc {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .featured-iframe {
-            flex: 1;
-            min-width: 300px;
-            aspect-ratio: 16/9;
-        }
-
-        /* Sections General */
-        section {
-            padding: 100px 0;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: 0.6s;
-        }
-
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            display: inline-block;
-            position: relative;
-        }
-
-        .section-header h2::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: var(--accent);
-            margin: 10px auto 0;
-            border-radius: 2px;
-        }
-
-        /* News / Announcements */
-        #news {
-            background: #151515;
-        }
-
-        .news-list {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .news-item {
-            padding: 20px;
-            border-bottom: 1px solid #333;
-            display: flex;
-            gap: 20px;
-            align-items: baseline;
-        }
-
-        .news-date {
-            color: var(--accent);
-            font-weight: bold;
-            font-family: monospace;
-        }
-
-        .news-content {
-            color: var(--text-main);
-            line-height: 1.6;
-        }
-
-        /* Profile */
-        .profile-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 40px;
-            display: flex;
-            align-items: center;
-            gap: 50px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid #333;
-        }
-
-        .profile-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--accent);
-            flex-shrink: 0;
-        }
-
-        .profile-bio h3 {
-            font-size: 2rem;
-            margin-bottom: 15px;
-        }
-
-        .profile-bio p {
-            color: var(--text-sub);
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-
-        /* Members */
-        #members {
-            background: #151515;
-        }
-
-        .members-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        .member-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            border: 1px solid #333;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .member-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent);
-        }
-
-        .member-icon {
-            width: 120px;
-            height: 120px;
-            background: #333;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-
-        .member-name {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .member-role {
-            color: var(--accent);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .member-desc {
-            color: var(--text-sub);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-        }
-
-        /* Video Grid */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .video-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* 2. Soundboard */
+        #soundboard {
+            position: fixed;
+            bottom: 40px;
+            right: 20px;
+            z-index: 800;
             display: flex;
             flex-direction: column;
+            gap: 10px;
+        }
+
+        .sound-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: #333;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            transition: 0.2s;
+        }
+
+        .sound-btn:hover {
+            transform: scale(1.1);
+            background: var(--accent);
+        }
+
+        /* 1. Infinite Like */
+        #like-btn-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .heart-particle {
+            position: fixed;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            z-index: 999;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(2);
+            }
+        }
+
+        /* 6. Fake Chat Overlay */
+        #chat-overlay {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 500;
+        }
+
+        .danmaku {
+            position: absolute;
+            white-space: nowrap;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            opacity: 0.8;
+        }
+
+        /* 7. Clicker Game */
+        #clicker-section {
+            text-align: center;
+            background: #111;
+            padding: 40px;
+            border-radius: 10px;
+            margin: 40px auto;
+            max-width: 400px;
             border: 1px solid #333;
         }
 
-        .video-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(255, 0, 0, 0.15);
-            border-color: #555;
+        /* 13. BBS */
+        #bbs-section {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 10px;
+            margin-top: 50px;
         }
 
-        .video-thumbnail {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background-color: #000;
-            position: relative;
-            cursor: pointer;
+        .bbs-post {
+            background: #222;
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 10px;
+            border-radius: 5px;
         }
 
-        .video-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.9;
-            transition: 0.3s;
+        .bbs-name {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        .video-thumbnail:hover img {
-            opacity: 0.7;
+        .bbs-msg {
+            font-size: 1rem;
+            margin-top: 5px;
+            color: #eee;
         }
 
-        .play-icon {
-            position: absolute;
+        /* 8. Cult Quiz */
+        .quiz-modal {
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-
-        .play-icon::after {
-            content: '';
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-left: 18px solid white;
-            margin-left: 5px;
-        }
-
-        .video-thumbnail:hover .play-icon {
-            background: var(--accent);
-            border-color: var(--accent);
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-
-        .video-info {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .video-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            line-height: 1.4;
-            color: var(--text-main);
-        }
-
-        .video-date {
-            font-size: 0.85rem;
-            color: var(--text-sub);
-            margin-bottom: 15px;
-        }
-
-        .video-link-btn {
-            margin-top: auto;
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: transparent;
-            border: 1px solid #444;
-            color: var(--text-sub);
-            border-radius: 6px;
-            text-align: center;
-            transition: 0.3s;
-            font-weight: 600;
-        }
-
-        .video-link-btn:hover {
-            border-color: var(--text-main);
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Gacha Section */
-        #gacha {
-            background: #151515;
-            text-align: center;
-            overflow: hidden;
-        }
-
-        .gacha-box {
-            background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v5.1L6 40H0v-11.5l20-8zM40 0h-6l-14 21v-2.5H0v-2h20L34 0h6zM28.5 40l-14-21h6.5l14 21h-6.5z' fill='%23222' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
-            padding: 50px;
-            border-radius: 20px;
-            display: inline-block;
-            border: 2px dashed #444;
-            max-width: 600px;
-            width: 100%;
-        }
-
-        #gacha-result {
-            margin-top: 30px;
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .gacha-placeholder {
-            font-size: 5rem;
-            color: #333;
-        }
-
-        /* Requests Section */
-        .request-box {
-            text-align: center;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            padding: 60px;
-            border-radius: 20px;
-            border: 1px solid #333;
-        }
-
-        .request-box h3 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-
-        .request-box p {
-            color: var(--text-sub);
-            margin-bottom: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Footer */
-        footer {
-            background: #050505;
-            padding: 60px 0;
-            text-align: center;
-            border-top: 1px solid #222;
-        }
-
-        .footer-logo {
-            font-weight: 900;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #555;
-        }
-
-        .copyright {
-            color: #444;
-            font-size: 0.8rem;
-        }
-
-        /* Admin Trigger (Secret) */
-        #admin-trigger {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
             background: #222;
-            margin-top: 20px;
-            cursor: default;
-            border-radius: 2px;
-            transition: 0.3s;
+            padding: 30px;
+            border: 2px solid var(--accent);
+            z-index: 2000;
+            text-align: center;
+            display: none;
+            width: 90%;
+            max-width: 400px;
         }
 
-        #admin-trigger:hover {
-            background: #333;
+        /* 9. Glitch */
+        .glitch-active {
+            animation: glitch-anim 0.2s infinite;
+            filter: hue-rotate(90deg);
         }
 
-        /* Admin Modal */
-        #admin-modal {
+        @keyframes glitch-anim {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-5px, 5px);
+            }
+
+            40% {
+                transform: translate(5px, -5px);
+            }
+
+            60% {
+                transform: translate(-5px, -5px);
+            }
+
+            80% {
+                transform: translate(5px, 5px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        /* 10. Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f00;
+            z-index: 9999;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        /* 15. Gravity Mode */
+        .falling {
+            transition: transform 2s ease-in;
+            transform: translateY(1000px) rotate(45deg);
+        }
+
+        /* IP Ban Overlay */
+        #banned-screen {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            overflow-y: auto;
+            background: black;
+            z-index: 10000;
+            color: red;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            text-align: center;
         }
 
+        /* Others from previous v2 */
         .admin-panel {
             background: #1a1a1a;
-            max-width: 700px;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 12px;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
             border: 1px solid var(--accent);
-            box-shadow: 0 0 50px rgba(255, 0, 0, 0.2);
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+            overflow-y: auto;
+            max-height: 90vh;
         }
 
         .admin-section {
-            margin-bottom: 30px;
             background: #111;
-            padding: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
             border-radius: 8px;
-            border: 1px solid #222;
-        }
-
-        .admin-section h4 {
-            color: var(--accent);
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #888;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
         }
 
         input,
         textarea,
         select {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             background: #222;
             border: 1px solid #444;
             color: white;
-            border-radius: 4px;
-            font-family: inherit;
+            margin-bottom: 10px;
         }
 
-        input:focus,
-        textarea:focus {
-            border-color: var(--accent);
-            outline: none;
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
-        .admin-btn {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: 0.2s;
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: 0.3s;
         }
 
-        .admin-btn:hover {
-            background: #444;
+        .video-thumbnail {
+            aspect-ratio: 16/9;
+            background: #000;
+            position: relative;
         }
 
-        .admin-btn.primary {
-            background: var(--accent);
-        }
-
-        .admin-btn.primary:hover {
-            background: var(--accent-hover);
-        }
-
-        .admin-btn.danger {
-            background: #800;
-        }
-
-        /* Emergency Overlay */
-        #emergency-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        .video-thumbnail img {
             width: 100%;
             height: 100%;
-            background: #f00;
-            z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            animation: blink 0.5s infinite;
+            object-fit: cover;
         }
 
-        @keyframes blink {
-
-            0%,
-            100% {
-                background: #a00;
-            }
-
-            50% {
-                background: #d00;
-            }
-        }
-
-        .emergency-text {
-            font-size: 5rem;
-            font-weight: 900;
-            color: white;
-            text-transform: uppercase;
-        }
-
-        /* Terminal Overlay */
-        #terminal-overlay {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40vh;
-            background: rgba(0, 0, 0, 0.95);
-            border-top: 2px solid #0f0;
-            z-index: 9998;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            color: #0f0;
-            overflow: hidden;
-        }
-
-        /* Animation Keyframes */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Global Edit Mode */
-        body.god-mode * {
-            cursor: text !important;
-            outline: 1px dashed rgba(255, 255, 255, 0.2);
-        }
-
-        /* Responsive */
+        /* Mobile */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2.8rem;
+                font-size: 2.5rem;
             }
 
             .nav-links {
                 display: none;
-            }
-
-            .profile-card {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .profile-img {
-                width: 150px;
-                height: 150px;
-                margin-bottom: 20px;
-            }
-
-            .menu-toggle {
-                display: block;
-                color: white;
             }
         }
     </style>
@@ -807,629 +483,424 @@
 
 <body>
 
-    <!-- Emergency Overlay -->
-    <div id="emergency-overlay">
-        <div class="emergency-text">EMERGENCY</div>
-        <p style="color:white; font-size:1.5rem;">System Critical Failure...</p>
-        <button onclick="stopEmergency()"
-            style="margin-top:20px; padding:10px; background:white; color:black; border:none; cursor:pointer;">TERMINATE</button>
+    <!-- IP BAN SCREEN -->
+    <div id="banned-screen">
+        <h1 style="font-size: 4rem;">🚫 BANNED</h1>
+        <p>You have been permanently banned from this website.</p>
+        <p style="font-size: 0.8rem; margin-top: 20px;">Reason: Being too weak.</p>
     </div>
 
-    <!-- Terminal Overlay -->
-    <div id="terminal-overlay"></div>
+    <!-- NEWS TICKER -->
+    <div id="news-ticker">
+        <span id="ticker-content">KEICHII CHANNEL OFFICIAL SITE OPEN! /// チャンネル登録よろしく！ /// けいちい最強 /// ポテトは今日もポテト ///
+            暇っちーは神 /// はるは迷子 /// 依頼はDMまで /// </span>
+    </div>
 
-    <!-- Navigation -->
+    <!-- CURSOR CANVAS -->
+    <canvas id="cursor-canvas"></canvas>
+
+    <!-- FAKE CHAT -->
+    <div id="chat-overlay"></div>
+
+    <!-- SOUNDBOARD -->
+    <div id="soundboard">
+        <button class="sound-btn" onclick="playSound('bruh')">🔊</button>
+        <button class="sound-btn" onclick="playSound('wow')">✨</button>
+        <button class="sound-btn" onclick="toggleGlitch()">👾</button>
+        <button class="sound-btn" onclick="toggleGravity()">☄️</button>
+    </div>
+
+    <!-- NAV -->
     <nav id="navbar">
         <div class="container nav-container">
             <a href="#" class="logo">KEICHII<span>.</span></a>
-            <div class="menu-toggle">☰</div>
             <ul class="nav-links">
                 <li><a href="#hero">HOME</a></li>
-                <li><a href="#news">NEWS</a></li>
-                <li><a href="#profile">PROFILE</a></li>
-                <li><a href="#members">MEMBERS</a></li>
                 <li><a href="#videos">VIDEOS</a></li>
                 <li><a href="#gacha">GACHA</a></li>
-                <li><a href="#requests">REQUEST</a></li>
+                <li><a href="#bbs-section">BBS</a></li>
+                <li><a href="#admin-trigger-btn">ADMIN</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- HERO -->
     <header id="hero" class="hero">
         <div class="hero-content container">
             <h1>KEICHII<br>CHANNEL</h1>
             <p>ゲームと日常、カオスな世界へようこそ。</p>
-
-            <!-- Countdown (Admin Feature) -->
-            <div id="countdown-container" class="countdown-box">
-                <div id="countdown-label" class="countdown-text">NEXT EVENT</div>
-                <div id="countdown-timer" class="countdown-timer">00:00:00</div>
-            </div>
-
-            <div style="margin-top: 40px;">
+            <div class="retro-counter">VISITOR: <span id="visitor-count">099999</span></div>
+            <div style="margin-top: 30px;">
                 <a href="https://www.youtube.com/channel/UCQEzA7Osw6Wm2jTdZgTTpmg?sub_confirmation=1" target="_blank"
-                    class="btn">
-                    Subscribe Now
-                </a>
+                    class="btn">Subscribe</a>
+                <button onclick="startConfetti()" class="btn"
+                    style="background:var(--gold); color:black; margin-left:10px;">Celebrate!</button>
             </div>
         </div>
     </header>
 
-    <!-- Featured Video (Admin Feature) -->
-    <section id="featured-video-section">
-        <div class="container">
-            <div class="featured-wrapper">
-                <div class="featured-desc">
-                    <span class="featured-label">PICK UP!</span>
-                    <h2 style="font-size: 2rem; margin-bottom: 10px;">今一番見てほしい動画</h2>
-                    <p style="color: #aaa;">管理者が独断と偏見で選んだ最高傑作。</p>
-                </div>
-                <div id="featured-iframe-container" class="featured-iframe">
-                    <!-- iframe injected by JS -->
-                </div>
-            </div>
+    <!-- INFINITE LIKE -->
+    <div class="container" id="like-btn-container">
+        <button class="btn" onclick="spawnHeart(event)" style="background: #e91e63; font-size: 1.5rem;">❤️ INFINITE
+            LIKE</button>
+    </div>
+
+    <!-- CLICKER GAME -->
+    <div class="container">
+        <div id="clicker-section">
+            <h3>KEICHII CLICKER</h3>
+            <div id="click-count" style="font-size: 3rem; font-weight: 900; margin: 10px 0;">0</div>
+            <button class="btn" onclick="clickerIncrement()">CLICK ME!</button>
+        </div>
+    </div>
+
+    <!-- OMIKUJI -->
+    <div class="container" style="text-align: center; margin: 40px auto;">
+        <button class="btn" onclick="drawOmikuji()" style="background: #8e44ad;">今日の運勢 (おみくじ)</button>
+        <div id="omikuji-result" style="font-size: 2rem; font-weight: bold; margin-top: 10px; height: 40px;"></div>
+    </div>
+
+    <!-- BBS SECTION -->
+    <section id="bbs-section" class="container">
+        <div class="section-header">
+            <h2>BULLETIN BOARD</h2>
+        </div>
+        <div id="bbs-list"
+            style="max-height: 400px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #333; padding: 10px;">
+            <!-- Posts go here -->
+        </div>
+        <div>
+            <input type="text" id="bbs-name" placeholder="Name" style="width: 30%;">
+            <input type="text" id="bbs-msg" placeholder="Message" style="width: 68%;">
+            <button class="btn" onclick="postBBS()">POST</button>
         </div>
     </section>
 
-    <!-- News Section (Admin Editable) -->
-    <section id="news">
-        <div class="container">
-            <div class="section-header">
-                <h2>NEWS</h2>
-            </div>
-            <div class="news-list" id="news-list">
-                <!-- News items injected by JS -->
-                <div class="news-item">
-                    <div class="news-date">2024.01.01</div>
-                    <div class="news-content">公式サイトをリニューアルオープンしました！</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Profile Section -->
-    <section id="profile">
-        <div class="container">
-            <div class="section-header">
-                <h2>PROFILE</h2>
-            </div>
-            <div class="profile-card">
-                <img src="https://yt3.googleusercontent.com/ytc/AIdro_nxxxxxxxxx-placeholder" alt="Keichii Icon"
-                    class="profile-img" style="background:#333;">
-                <div class="profile-bio">
-                    <h3>けいちい / Keichii</h3>
-                    <p>
-                        ゲーム実況を中心に活動する動画クリエイター。<br>
-                        FPSからバカゲーまで幅広くプレイ。テンションと勢いだけで何とかするスタイル。<br>
-                        編集にはこだわりがあり、視聴者を飽きさせないテンポ感を重視している。
-                    </p>
-                    <div class="social-links" style="justify-content: flex-start;">
-                        <a href="https://twitter.com" target="_blank">𝕏</a>
-                        <a href="https://instagram.com" target="_blank">IG</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Members Section -->
-    <section id="members">
-        <div class="container">
-            <div class="section-header">
-                <h2>VIDEO TEAM</h2>
-            </div>
-            <div class="members-grid">
-                <!-- Member 1: Himacchii -->
-                <div class="member-card">
-                    <div class="member-icon">暇</div>
-                    <div class="member-name">暇っちー</div>
-                    <div class="member-role">リーダー / 編集</div>
-                    <div class="member-desc">
-                        俺が噂の管理者。<br>全てを統べる神（自称）。
-                    </div>
-                    <a href="https://youtube.com/channel/UCHSq3_Rs9iBF7dtOwqXy7Aw?si=50Vk4svzFV2OB4qv" target="_blank"
-                        class="btn" style="font-size:0.8rem; padding: 8px 20px;">
-                        Channel
-                    </a>
-                </div>
-
-                <!-- Member 2: Potato -->
-                <div class="member-card">
-                    <div class="member-icon" style="color:#ffcc00;">🍟</div>
-                    <div class="member-name">ポテト</div>
-                    <div class="member-role">メンバー / 企画</div>
-                    <div class="member-desc">
-                        ポテトを愛しポテトに愛された男。<br>たまに奇跡を起こす。
-                    </div>
-                    <a href="https://youtube.com/@potato-j5j?si=AugGOaTQOyJ99xMb" target="_blank" class="btn"
-                        style="font-size:0.8rem; padding: 8px 20px;">
-                        Channel
-                    </a>
-                </div>
-
-                <!-- Member 3: Haru -->
-                <div class="member-card">
-                    <div class="member-icon" style="color:#ff99cc;">🌸</div>
-                    <div class="member-name">はる</div>
-                    <div class="member-role">メンバー / 天然</div>
-                    <div class="member-desc">
-                        予測不能な行動で場を荒らす。<br>存在がコンテンツ。
-                    </div>
-                    <!-- No Link as requested -->
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Videos Section -->
+    <!-- VIDEOS -->
     <section id="videos">
         <div class="container">
             <div class="section-header">
                 <h2>LATEST VIDEOS</h2>
             </div>
+            <div id="featured-video-container" style="margin-bottom: 30px; display:none;"></div>
             <div id="video-grid" class="video-grid">
-                <div class="loading">Loading videos...</div>
+                <div style="text-align:center; width:100%;">Loading...</div>
             </div>
         </div>
     </section>
 
-    <!-- Gacha Section -->
-    <section id="gacha">
+    <!-- GACHA -->
+    <section id="gacha" style="text-align:center; padding: 60px 0; background:#111;">
         <div class="container">
-            <div class="section-header">
-                <h2>VIDEO GACHA</h2>
+            <h2>VIDEO GACHA</h2>
+            <div id="gacha-display"
+                style="border: 2px dashed #555; height: 300px; display:flex; align-items:center; justify-content:center; margin: 20px auto; max-width:600px; border-radius:10px;">
+                <span style="font-size:3rem;">?</span>
             </div>
-            <p style="color:var(--text-sub); margin-bottom:30px;">何を見るか迷ったら運に任せろ！今日の動画ガチャ。</p>
-
-            <div class="gacha-box">
-                <div id="gacha-result">
-                    <div class="gacha-placeholder">?</div>
-                </div>
-                <button id="gacha-btn" class="btn" style="margin-top: 20px; font-size: 1.2rem;">
-                    ガチャを回す
-                </button>
-            </div>
+            <button class="btn" onclick="runGacha()">ROLL GACHA</button>
         </div>
     </section>
 
-    <!-- Request Section -->
-    <section id="requests">
-        <div class="container">
-            <div class="request-box">
-                <h3>依頼所・ネタ提供</h3>
-                <p>
-                    「こんなゲームやってほしい！」「こんな企画が見たい！」「コラボのお誘い」など、<br>
-                    皆様からのリクエストを常時受け付けております。
-                </p>
-                <a href="#" class="btn" style="background: white; color: black;">
-                    リクエストを送る (Google Form)
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer>
         <div class="container">
-            <div class="footer-logo">KEICHII CHANNEL</div>
-            <div class="social-links" style="margin-bottom: 20px;">
-                <a href="https://www.youtube.com/channel/UCQEzA7Osw6Wm2jTdZgTTpmg" target="_blank">YT</a>
-            </div>
-            <p class="copyright">&copy; 2024 Keichii Official. All rights reserved.</p>
-
-            <!-- Secret Trigger: Visible for ease of use -->
-            <div style="margin-top: 20px;">
+            <p>&copy; 2024 Keichii Official.</p>
+            <div style="margin-top: 30px;">
                 <button id="admin-trigger-btn" class="btn"
-                    style="background:#222; font-size:0.8rem; padding: 5px 15px;">管理者ログイン (ここをクリック)</button>
+                    style="background:#222; font-size:0.8rem; padding: 5px 15px;">管理者ログイン</button>
             </div>
+            <div style="margin-top: 10px; font-size: 0.7rem; color: #333; cursor: pointer;" onclick="showQuiz()">?
+                Secret Room ?</div>
         </div>
     </footer>
 
 
-    <!-- ============================================== -->
-    <!-- ADMIN MODAL SYSTEM -->
-    <!-- ============================================== -->
-    <div id="admin-modal">
+    <!-- ADMIN MODAL -->
+    <div id="admin-modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; overflow-y:auto;">
         <div class="admin-panel">
-            <div class="admin-header">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
                 <h2>ADMIN DASHBOARD</h2>
-                <button onclick="closeAdmin()" class="admin-btn">Close</button>
+                <button onclick="document.getElementById('admin-modal').style.display='none'" class="btn"
+                    style="background:#444;">CLOSE</button>
             </div>
 
-            <!-- Login View -->
-            <div id="admin-login-view">
-                <p style="margin-bottom:15px;">Enter Password (keichiidougahankamisugidayonee):</p>
-                <input type="password" id="admin-pass" placeholder="Password">
-                <button onclick="checkAdmin()" class="admin-btn primary"
-                    style="width:100%; margin-top:10px;">Login</button>
+            <!-- LOGIN -->
+            <div id="admin-login">
+                <p>Password Required:</p>
+                <input type="password" id="admin-pass">
+                <!-- Hint is HIDDEN as requested -->
+                <button onclick="loginAdmin()" class="btn">LOGIN</button>
             </div>
 
-            <!-- Dashboard View -->
-            <div id="admin-dashboard-view" style="display:none;">
-                <p style="color:var(--text-sub); margin-bottom:20px;">Welcome back, <strong>暇っちー</strong> (Admin).</p>
-
+            <!-- DASHBOARD -->
+            <div id="admin-dash" style="display:none;">
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                    <!-- Left Column -->
+                    <!-- Col 1 -->
                     <div>
                         <div class="admin-section">
-                            <h4>📝 ネタ帳 (自分用メモ)</h4>
-                            <textarea id="admin-memo" rows="4" placeholder="思いついた企画をここに書く..."></textarea>
-                            <button onclick="saveMemo()" class="admin-btn primary" style="margin-top:10px;">Save
-                                Memo</button>
+                            <h4>📝 Memo</h4>
+                            <textarea id="admin-memo" placeholder="Ideas..."></textarea>
+                            <button onclick="saveMemo()" class="btn"
+                                style="padding:5px 10px; font-size:0.8rem;">Save</button>
                         </div>
-
                         <div class="admin-section">
-                            <h4>📢 お知らせ投稿</h4>
-                            <div class="form-group">
-                                <input type="text" id="news-text" placeholder="お知らせ内容">
-                            </div>
-                            <button onclick="addNews()" class="admin-btn primary">Post</button>
-                            <button onclick="clearNews()" class="admin-btn">Clear</button>
+                            <h4>📢 News Ticker</h4>
+                            <input type="text" id="admin-news" placeholder="Add to ticker...">
+                            <button onclick="updateTicker()" class="btn"
+                                style="padding:5px 10px; font-size:0.8rem;">Update</button>
                         </div>
-
                         <div class="admin-section">
-                            <h4>🎨 テーマカラー変更</h4>
-                            <div style="display:flex; gap:10px;">
-                                <button onclick="setTheme('#ff0000')" class="admin-btn"
-                                    style="background:#ff0000; width:30px; height:30px;"></button>
-                                <button onclick="setTheme('#0088ff')" class="admin-btn"
-                                    style="background:#0088ff; width:30px; height:30px;"></button>
-                                <button onclick="setTheme('#00ff88')" class="admin-btn"
-                                    style="background:#00ff88; width:30px; height:30px;"></button>
-                                <button onclick="setTheme('#ffd700')" class="admin-btn"
-                                    style="background:#ffd700; width:30px; height:30px;"></button>
-                            </div>
+                            <h4>🎨 Color</h4>
+                            <input type="color"
+                                onchange="document.documentElement.style.setProperty('--accent', this.value)">
                         </div>
                     </div>
-
-                    <!-- Right Column (God Tier) -->
+                    <!-- Col 2: GOD TIER -->
                     <div>
                         <div class="admin-section">
-                            <h4>📺 ピックアップ動画</h4>
-                            <input type="text" id="featured-id" placeholder="Video ID">
-                            <button onclick="saveFeatured()" class="admin-btn primary" style="margin-top:10px;">Set
-                                Video</button>
+                            <h4 style="color:red;">🔨 BAN HAMMER</h4>
+                            <p style="font-size:0.8rem; color:#aaa;">Ban current user (IP simulator)</p>
+                            <button onclick="banUser()" class="btn" style="background:red; width:100%;">BAN MYSELF
+                                (TEST)</button>
+                            <button onclick="unbanUser()" class="btn"
+                                style="background:green; width:100%; margin-top:5px;">UNBAN</button>
                         </div>
-
                         <div class="admin-section">
-                            <h4>⏳ イベントカウントダウン</h4>
-                            <input type="datetime-local" id="countdown-date" style="margin-bottom:5px;">
-                            <input type="text" id="countdown-title" placeholder="Event Name">
-                            <button onclick="setCountdown()" class="admin-btn primary"
-                                style="margin-top:10px;">Start</button>
-                            <button onclick="stopCountdown()" class="admin-btn">Stop</button>
+                            <h4 style="color:gold;">⚡ God Tools</h4>
+                            <button onclick="toggleGlobalEdit()" class="btn"
+                                style="width:100%; background:#444; margin-bottom:5px;">Global Edit</button>
+                            <button onclick="triggerEmergency()" class="btn"
+                                style="width:100%; background:red; margin-bottom:5px;">EMERGENCY</button>
+                            <button onclick="toggleTerminal()" class="btn"
+                                style="width:100%; background:#0f0; color:black;">TERMINAL</button>
                         </div>
-
-                        <div class="admin-section" style="border-color: #555;">
-                            <h4 style="color: gold;">⚡ God Tier Tools</h4>
-                            <button onclick="toggleGlobalEdit()" class="admin-btn primary"
-                                style="width:100%; margin-bottom:10px;">God Hand (Edit Mode)</button>
-                            <button onclick="triggerEmergency()" class="admin-btn danger"
-                                style="width:100%; margin-bottom:10px;">EMERGENCY ALERT</button>
-                            <button onclick="toggleTerminal()" class="admin-btn"
-                                style="width:100%; border:1px solid #0f0; color:#0f0;">Hacker Terminal</button>
-                            <div style="margin-top:10px;">
-                                <input type="text" id="css-inject" placeholder="CSS here (e.g. body{background:blue;})">
-                                <button onclick="injectCSS()" class="admin-btn"
-                                    style="width:100%; margin-top:5px;">Inject CSS</button>
-                            </div>
+                        <div class="admin-section">
+                            <h4>📺 Featured Video</h4>
+                            <input type="text" id="feat-id" placeholder="Video ID">
+                            <button onclick="setFeatured()" class="btn" style="padding:5px 10px;">Set</button>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
+    <!-- TERMINAL -->
+    <div id="terminal-overlay"
+        style="display:none; position:fixed; bottom:0; left:0; width:100%; height:40vh; background:black; border-top:2px solid #0f0; z-index:9998; padding:20px; color:#0f0; font-family:monospace; overflow:hidden;">
+    </div>
+
+    <!-- EMERGENCY -->
+    <div id="emergency-overlay"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:red; z-index:9999; animation:blink 0.2s infinite; display:none; flex-direction:column; justify-content:center; align-items:center;">
+        <h1 style="font-size:5rem; color:white;">EMERGENCY</h1>
+        <button onclick="document.getElementById('emergency-overlay').style.display='none'"
+            style="padding:20px;">STOP</button>
+    </div>
+
+    <!-- QUIZ MODAL -->
+    <div id="quiz-modal" class="quiz-modal">
+        <h3>CULT QUIZ</h3>
+        <p>Q. けいちいの好きな食べ物は？</p>
+        <button onclick="alert('正解！')" class="btn" style="margin:5px;">ポテト</button>
+        <button onclick="alert('不正解！')" class="btn" style="margin:5px;">寿司</button>
+        <button onclick="document.getElementById('quiz-modal').style.display='none'"
+            style="display:block; margin:20px auto; background:none; border:none; color:#888;">Close</button>
+    </div>
 
     <script>
-        // ==========================================
-        // CONFIG
-        // ==========================================
-        const API_KEY = 'AIzaSyC3Ap4eXD-UM3lZDfvjXVQqJZFcQvOWqX8'; // YOUR_API_KEY
+        // --- CONFIG & INIT ---
+        const API_KEY = 'AIzaSyC3Ap4eXD-UM3lZDfvjXVQqJZFcQvOWqX8';
         const CHANNEL_ID = 'UCQEzA7Osw6Wm2jTdZgTTpmg';
-        const VIDEO_MAX = 9;
-        const ADMIN_PASS = 'keichiidougahankamisugidayonee';
-        // ==========================================
+        const PASSWORD = 'keichiidougahankamisugidayonee';
 
-        const videoGrid = document.getElementById('video-grid');
-        let fetchedVideos = [];
-
-        // STARTUP
-        window.addEventListener('DOMContentLoaded', () => {
+        window.onload = () => {
+            checkBan();
             fetchVideos();
-            loadAdminSettings();
-            initIntersectionObserver();
-        });
+            initCursor();
+            initBBS();
+            loadAdminData();
+            startFakeChat();
 
-        // 1. FETCH VIDEOS
-        async function fetchVideos() {
-            if (API_KEY.includes('YOUR_API_KEY')) {
-                videoGrid.innerHTML = '<div class="loading">APIキーを設定してください</div>';
-                return;
-            }
-            try {
-                const res = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${VIDEO_MAX}&type=video`);
-                if (!res.ok) throw new Error(res.status);
-                const data = await res.json();
-                fetchedVideos = data.items;
-                renderVideos(fetchedVideos);
-            } catch (e) {
-                console.error(e);
-                videoGrid.innerHTML = '<div class="loading">動画読み込み失敗 (API Error)</div>';
-            }
-        }
-
-        function renderVideos(items) {
-            videoGrid.innerHTML = '';
-            items.forEach(item => {
-                const vid = item.id.videoId;
-                const snip = item.snippet;
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <div class="video-thumbnail" onclick="playVideo(this, '${vid}')">
-                        <img src="${snip.thumbnails.high ? snip.thumbnails.high.url : snip.thumbnails.medium.url}">
-                        <div class="play-icon"></div>
-                    </div>
-                    <div class="video-info">
-                        <div class="video-date">${new Date(snip.publishedAt).toLocaleDateString('ja-JP')}</div>
-                        <h3 class="video-title">${snip.title}</h3>
-                        <a href="https://www.youtube.com/watch?v=${vid}" target="_blank" class="video-link-btn">YouTube</a>
-                    </div>
-                `;
-                videoGrid.appendChild(card);
+            // Konami Code
+            let kCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            let kIdx = 0;
+            document.addEventListener('keydown', (e) => {
+                if (e.key === kCode[kIdx]) {
+                    kIdx++;
+                    if (kIdx === kCode.length) {
+                        alert('KONAMI CODE ACTIVATED: GOD MODE ON');
+                        document.body.style.transform = 'skew(10deg)';
+                        kIdx = 0;
+                    }
+                } else { kIdx = 0; }
             });
-        }
+        };
 
-        function playVideo(el, vid) {
-            el.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${vid}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
-            el.onclick = null;
-        }
-
-        // 2. GACHA SYSTEM
-        const gachaBtn = document.getElementById('gacha-btn');
-        const gachaResult = document.getElementById('gacha-result');
-
-        gachaBtn.addEventListener('click', () => {
-            if (fetchedVideos.length === 0) return;
-            gachaResult.innerHTML = '<div class="gacha-placeholder" style="animation: spin 0.2s linear infinite;">🎰</div>';
-
-            setTimeout(() => {
-                const randomVid = fetchedVideos[Math.floor(Math.random() * fetchedVideos.length)];
-                const vid = randomVid.id.videoId;
-                gachaResult.innerHTML = `
-                    <div style="width:100%; max-width:500px;">
-                        <iframe width="100%" height="315" src="https://www.youtube.com/embed/${vid}" frameborder="0" allowfullscreen style="border-radius:10px; border:2px solid var(--accent);"></iframe>
-                        <p style="margin-top:10px; font-weight:bold;">${randomVid.snippet.title}</p>
+        // --- VIDEOS ---
+        let allVideos = [];
+        async function fetchVideos() {
+            try {
+                const res = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=9&type=video`);
+                const data = await res.json();
+                allVideos = data.items || [];
+                const grid = document.getElementById('video-grid');
+                grid.innerHTML = allVideos.map(v => `
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <img src="${v.snippet.thumbnails.high.url}">
+                        </div>
+                        <div style="padding:15px;">
+                            <h4 style="font-size:0.9rem;">${v.snippet.title}</h4>
+                            <a href="https://www.youtube.com/watch?v=${v.id.videoId}" target="_blank" style="color:var(--accent); font-size:0.8rem;">Watch</a>
+                        </div>
                     </div>
-                `;
-            }, 1500);
-        });
-
-        // 3. ADMIN & LOCAL STORAGE SYSTEM
-        // ------------------------------------
-        const modal = document.getElementById('admin-modal');
-        const adminBtn = document.getElementById('admin-trigger-btn');
-        const loginView = document.getElementById('admin-login-view');
-        const dashView = document.getElementById('admin-dashboard-view');
-
-        // Trigger (1 Click now)
-        adminBtn.addEventListener('click', () => {
-            modal.style.display = 'block';
-        });
-
-        function closeAdmin() { modal.style.display = 'none'; }
-
-        function checkAdmin() {
-            const pass = document.getElementById('admin-pass').value;
-            if (pass === ADMIN_PASS) {
-                loginView.style.display = 'none';
-                dashView.style.display = 'block';
-                loadAdminValues(); // Populate inputs
-            } else {
-                alert('Wrong Password.');
-            }
+                `).join('');
+            } catch (e) { document.getElementById('video-grid').innerHTML = 'Load failed'; }
         }
 
-        // Load persisted settings
-        function loadAdminSettings() {
-            const news = JSON.parse(localStorage.getItem('keichii_news') || '[]');
-            renderNews(news);
-
-            const color = localStorage.getItem('keichii_accent');
-            if (color) document.documentElement.style.setProperty('--accent', color);
-
-            const featId = localStorage.getItem('keichii_featured');
-            if (featId) showFeatured(featId);
-
-            const countTarget = localStorage.getItem('keichii_countdown_date');
-            if (countTarget) startTimer(countTarget, localStorage.getItem('keichii_countdown_title'));
-        }
-
-        function loadAdminValues() {
-            document.getElementById('admin-memo').value = localStorage.getItem('keichii_memo') || '';
-        }
-
-        // --- Features ---
-
-        // Memo
-        function saveMemo() {
-            localStorage.setItem('keichii_memo', document.getElementById('admin-memo').value);
-            alert('Saved!');
-        }
-
-        // News
-        function addNews() {
-            const text = document.getElementById('news-text').value;
-            if (!text) return;
-            const news = JSON.parse(localStorage.getItem('keichii_news') || '[]');
-            const date = new Date().toLocaleDateString('ja-JP');
-            news.unshift({ date, text });
-            localStorage.setItem('keichii_news', JSON.stringify(news));
-            renderNews(news);
-            document.getElementById('news-text').value = '';
-        }
-        function clearNews() {
-            if (confirm('Delete all news?')) {
-                localStorage.removeItem('keichii_news');
-                renderNews([]);
-            }
-        }
-        function renderNews(newsList) {
-            const container = document.getElementById('news-list');
-            if (newsList.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:#555;">No News</div>';
-                return;
-            }
-            container.innerHTML = newsList.map(n => `
-                <div class="news-item">
-                    <div class="news-date">${n.date}</div>
-                    <div class="news-content">${n.text}</div>
-                </div>
-            `).join('');
-        }
-
-        // Featured Video
-        function saveFeatured() {
-            const id = document.getElementById('featured-id').value;
-            localStorage.setItem('keichii_featured', id);
-            showFeatured(id);
-            alert('Updated Featured Video');
-        }
-        function removeFeatured() {
-            localStorage.removeItem('keichii_featured');
-            document.getElementById('featured-video-section').style.display = 'none';
-        }
-        function showFeatured(id) {
-            if (!id) return;
-            const section = document.getElementById('featured-video-section');
-            const container = document.getElementById('featured-iframe-container');
-            section.style.display = 'block';
-            container.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe>`;
-        }
-
-        // Countdown
-        let timerInterval;
-        function setCountdown() {
-            const dateVal = document.getElementById('countdown-date').value;
-            const titleVal = document.getElementById('countdown-title').value;
-            if (!dateVal) return;
-
-            localStorage.setItem('keichii_countdown_date', dateVal);
-            localStorage.setItem('keichii_countdown_title', titleVal);
-            startTimer(dateVal, titleVal);
-        }
-        function stopCountdown() {
-            clearInterval(timerInterval);
-            localStorage.removeItem('keichii_countdown_date');
-            document.getElementById('countdown-container').style.display = 'none';
-        }
-        function startTimer(dateStr, title) {
-            const target = new Date(dateStr).getTime();
-            const box = document.getElementById('countdown-container');
-            const label = document.getElementById('countdown-label');
-            const timer = document.getElementById('countdown-timer');
-
-            box.style.display = 'block';
-            if (title) label.textContent = title;
-
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                const now = new Date().getTime();
-                const dist = target - now;
-                if (dist < 0) { clearInterval(timerInterval); timer.textContent = "STARTED"; return; }
-                const d = Math.floor(dist / (1000 * 60 * 60 * 24));
-                const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((dist % (1000 * 60)) / 1000);
-                timer.textContent = `${d}d ${h}h ${m}m ${s}s`;
+        // --- GACHA ---
+        function runGacha() {
+            if (allVideos.length === 0) return;
+            const disp = document.getElementById('gacha-display');
+            disp.innerHTML = '<span style="font-size:3rem; animation:spin 0.1s infinite;">🎲</span>';
+            setTimeout(() => {
+                const v = allVideos[Math.floor(Math.random() * allVideos.length)];
+                disp.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${v.id.videoId}?autoplay=1" frameborder="0"></iframe>`;
             }, 1000);
         }
 
-        // Theme
-        function setTheme(color) {
-            document.documentElement.style.setProperty('--accent', color);
-            localStorage.setItem('keichii_accent', color);
+        // --- BBS ---
+        function initBBS() {
+            const list = document.getElementById('bbs-list');
+            const posts = JSON.parse(localStorage.getItem('keichii_bbs') || '[]');
+            renderBBS(posts);
+        }
+        function postBBS() {
+            const name = document.getElementById('bbs-name').value || 'Anonymous';
+            const msg = document.getElementById('bbs-msg').value;
+            if (!msg) return;
+            const posts = JSON.parse(localStorage.getItem('keichii_bbs') || '[]');
+            posts.unshift({ name, msg, date: new Date().toLocaleString() });
+            localStorage.setItem('keichii_bbs', JSON.stringify(posts));
+            renderBBS(posts);
+            document.getElementById('bbs-msg').value = '';
+        }
+        function renderBBS(posts) {
+            document.getElementById('bbs-list').innerHTML = posts.map(p => `
+                <div class="bbs-post"><div class="bbs-name">${p.name} <span style="font-size:0.7rem; color:#666;">${p.date}</span></div><div class="bbs-msg">${p.msg}</div></div>
+            `).join('');
         }
 
-        // --- GOD TIER FEATURES ---
+        // --- ADMIN ---
+        document.getElementById('admin-trigger-btn').onclick = () => document.getElementById('admin-modal').style.display = 'block';
 
-        // 6. Global Edit Mode
-        function toggleGlobalEdit() {
-            const isEditable = document.body.contentEditable === 'true';
-            document.body.contentEditable = !isEditable;
-            if (!isEditable) {
-                document.body.classList.add('god-mode');
-                alert('GOD HAND ACTIVATED: You can now edit any text on the page.');
-            } else {
-                document.body.classList.remove('god-mode');
-                alert('God Hand Deactivated.');
-            }
-            closeAdmin();
+        function loginAdmin() {
+            if (document.getElementById('admin-pass').value === PASSWORD) {
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-dash').style.display = 'block';
+            } else { alert('WRONG'); }
         }
 
-        // 7. Emergency Alert
+        function saveMemo() { localStorage.setItem('keichii_memo', document.getElementById('admin-memo').value); }
+        function loadAdminData() { document.getElementById('admin-memo').value = localStorage.getItem('keichii_memo') || ''; }
+        function updateTicker() { document.getElementById('ticker-content').textContent = document.getElementById('admin-news').value; }
+
+        function setFeatured() {
+            const id = document.getElementById('feat-id').value;
+            document.getElementById('featured-video-container').style.display = 'block';
+            document.getElementById('featured-video-container').innerHTML = `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${id}" frameborder="0"></iframe>`;
+        }
+
+        // --- GOD TOOLS & CHAOS ---
+        function banUser() { localStorage.setItem('keichii_banned', 'true'); checkBan(); }
+        function unbanUser() { localStorage.removeItem('keichii_banned'); location.reload(); }
+        function checkBan() { if (localStorage.getItem('keichii_banned')) document.getElementById('banned-screen').style.display = 'flex'; }
+
+        function toggleGlobalEdit() { document.body.contentEditable = document.body.contentEditable !== 'true'; alert('EDIT MODE TOGGLED'); }
         function triggerEmergency() {
-            const overlay = document.getElementById('emergency-overlay');
-            overlay.style.display = 'flex';
-            // Play alarm sound if possible? (Browser blocks autoplay usually)
-            closeAdmin();
+            const el = document.getElementById('emergency-overlay');
+            el.style.display = 'flex';
+            el.style.animation = 'blink 0.1s infinite';
         }
-        function stopEmergency() {
-            document.getElementById('emergency-overlay').style.display = 'none';
-        }
-
-        // 8. Terminal
         function toggleTerminal() {
-            const term = document.getElementById('terminal-overlay');
-            if (term.style.display === 'block') {
-                term.style.display = 'none';
-                return;
+            const t = document.getElementById('terminal-overlay');
+            t.style.display = t.style.display === 'block' ? 'none' : 'block';
+            if (t.style.display === 'block') {
+                setInterval(() => { t.innerHTML += `> SYSTEM OVERRIDE... [${Math.random()}]<br>`; t.scrollTop = t.scrollHeight; }, 50);
             }
-            term.style.display = 'block';
-            closeAdmin();
+        }
 
-            // Fake Log
+        function toggleGlitch() { document.body.classList.toggle('glitch-active'); }
+        function toggleGravity() {
+            document.querySelectorAll('div, section, h1, p').forEach(el => el.classList.add('falling'));
+            setTimeout(() => alert('Gravity restored on reload'), 2000);
+        }
+
+        // --- FUN STUFF ---
+        function spawnHeart(e) {
+            const h = document.createElement('div'); h.textContent = '❤'; h.className = 'heart-particle';
+            h.style.left = e.clientX + 'px'; h.style.top = e.clientY + 'px';
+            document.body.appendChild(h); setTimeout(() => h.remove(), 1000);
+        }
+
+        function clickerIncrement() {
+            const el = document.getElementById('click-count');
+            el.textContent = parseInt(el.textContent) + 1;
+        }
+
+        function drawOmikuji() {
+            const r = ['大吉', '吉', '凶', '大凶', '神', '虚無'];
+            document.getElementById('omikuji-result').textContent = r[Math.floor(Math.random() * r.length)];
+        }
+
+        function startConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const c = document.createElement('div'); c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw'; c.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(c);
+            }
+        }
+
+        function startFakeChat() {
+            const box = document.getElementById('chat-overlay');
+            const comments = ['草', 'www', '88888', '神', '初見です', '!?'];
             setInterval(() => {
-                const logs = [
-                    "Access grant: 192.168.0.1", "Bypassing firewall...", "Downloading assets...",
-                    "Encrypting payload...", "User_Keichii status: GOD", "Coffee level: LOW",
-                    "Compiling shaders...", "Injecting script...", "System override..."
-                ];
-                const p = document.createElement('div');
-                p.textContent = `> ${logs[Math.floor(Math.random() * logs.length)]} [${Date.now()}]`;
-                term.appendChild(p);
-                term.scrollTop = term.scrollHeight;
-                if (term.childElementCount > 20) term.firstChild.remove();
-            }, 100);
+                const c = document.createElement('div'); c.className = 'danmaku';
+                c.textContent = comments[Math.floor(Math.random() * comments.length)];
+                c.style.top = Math.random() * 80 + 'vh';
+                c.style.left = '100vw';
+                c.animate([{ left: '100vw' }, { left: '-100px' }], { duration: 5000 + Math.random() * 5000 });
+                box.appendChild(c);
+                setTimeout(() => c.remove(), 10000);
+            }, 800);
         }
 
-        // 9. CSS Inject
-        function injectCSS() {
-            const css = document.getElementById('css-inject').value;
-            const style = document.createElement('style');
-            style.textContent = css;
-            document.head.appendChild(style);
-            alert('CSS Injected!');
-        }
-
-
-        // 4. ANIMATION OBSERVER
-        function initIntersectionObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+        // Canvas Cursor
+        function initCursor() {
+            const cvs = document.getElementById('cursor-canvas');
+            const ctx = cvs.getContext('2d');
+            cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+            let particles = [];
+            window.onmousemove = (e) => {
+                for (let i = 0; i < 3; i++) particles.push({ x: e.clientX, y: e.clientY, vx: Math.random() - 0.5, vy: Math.random() - 0.5, life: 1 });
+            };
+            function loop() {
+                ctx.clearRect(0, 0, cvs.width, cvs.height);
+                particles.forEach((p, i) => {
+                    p.x += p.vx; p.y += p.vy; p.life -= 0.02;
+                    ctx.fillStyle = `rgba(255,255,0,${p.life})`; ctx.fillRect(p.x, p.y, 3, 3);
+                    if (p.life <= 0) particles.splice(i, 1);
                 });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('section').forEach(section => {
-                observer.observe(section);
-            });
+                requestAnimationFrame(loop);
+            }
+            loop();
         }
+
+        function showQuiz() { document.getElementById('quiz-modal').style.display = 'block'; }
+        function playSound(type) { alert(type === 'bruh' ? 'Bruh Sound Effect #2' : 'Wow!'); }
     </script>
 </body>
 
